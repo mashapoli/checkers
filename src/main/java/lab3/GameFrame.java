@@ -117,9 +117,9 @@ public class GameFrame extends JFrame {
             }
         } else if (curBoard.isPiece(rowIdx, colIdx) && !isFromIdxsSet()) {
             setFromIdxs(rowIdx, colIdx);
-        } else if (isFromIdxsSet()) {
-            if(curBoard.capture(fromRowIdx, fromColIdx, rowIdx, colIdx))  {
-                if(curBoard.isMenCapture(rowIdx, colIdx) || curBoard.isKingCapture(rowIdx, colIdx)) {
+        } else if (curBoard.isCapture() && isFromIdxsSet()) {
+            if(curBoard.capture(fromRowIdx, fromColIdx, rowIdx, colIdx)) {
+                if (curBoard.isMenCapture(rowIdx, colIdx) || curBoard.isKingCapture(rowIdx, colIdx)) {
                     setFromIdxs(rowIdx, colIdx);
                 } else {
                     unsetFromIdxs();
@@ -127,7 +127,12 @@ public class GameFrame extends JFrame {
                     curBoard = curBoard.swap();
                 }
                 return;
-            } else if(curBoard.move(fromRowIdx, fromColIdx, rowIdx, colIdx)) {
+            }
+            msg = "Некорректный ход";
+            unsetFromIdxs();
+            return;
+        } else if(isFromIdxsSet()) {
+            if(curBoard.move(fromRowIdx, fromColIdx, rowIdx, colIdx)) {
                 unsetFromIdxs();
                 isWhite = !isWhite;
                 curBoard = curBoard.swap();

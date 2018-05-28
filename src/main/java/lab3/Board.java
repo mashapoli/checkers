@@ -257,13 +257,16 @@ public final class Board {
                 int stpColInc = colDiff > 0 ? 1 : -1;
 
                 int blackCount = 0;
-                int blackRowIdx = -1, blackColIdx = -1;
+                Integer blackRowIdx = null, blackColIdx = null;
                 for (int stpRowIdx = fromRowIdx + stpRowStartIdx; stpRowIdx != fromRowIdx + rowDiff; stpRowIdx += stpRowInc) {
                     for (int stpColIdx = fromColIdx + stpColStartIdx; stpColIdx != fromColIdx + colDiff; stpColIdx += stpColInc) {
-                        if (isBoard(stpRowIdx, stpColIdx) && isBlack(stpRowIdx, stpColIdx)) {
+                        if (isBlack(stpRowIdx, stpColIdx)) {
                             blackRowIdx = stpRowIdx;
                             blackColIdx = stpColIdx;
                             blackCount++;
+                        }
+                        if(isWhite(stpRowIdx, stpColIdx)) {
+                            return false;
                         }
                     }
                 }
