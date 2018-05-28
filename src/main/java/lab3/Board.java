@@ -1,6 +1,6 @@
 package lab3;
 
-public class Board {
+public final class Board {
 
     public static final int EMPTY_SQUARE = 0;
     public static final int WHITE_MEN_SQUARE = 1;
@@ -85,6 +85,10 @@ public class Board {
         return isBoard(rowIdx, colIdx) && get(rowIdx, colIdx) < 0;
     }
 
+    public boolean isWhite(int rowIdx, int colIdx) {
+        return isBoard(rowIdx, colIdx) && get(rowIdx, colIdx) > 0;
+    }
+
     public boolean isMenCapture(int rowIdx, int colIdx) {
         if (isBoard(rowIdx, colIdx) && get(rowIdx, colIdx) == Board.WHITE_MEN_SQUARE) {
             if (isBoard(rowIdx + 1, colIdx + 1) && get(rowIdx + 1, colIdx + 1) < 0
@@ -106,14 +110,51 @@ public class Board {
             for (int blkIdx = 1; blkIdx < 8; blkIdx++) {
                 for (int stpIdx = blkIdx + 1; stpIdx < 8; stpIdx++) {
 
-                    if (isBoard(rowIdx + blkIdx, colIdx + blkIdx) && get(rowIdx + blkIdx, colIdx + blkIdx) < 0
-                            && isBoard(rowIdx + stpIdx, colIdx + stpIdx) && get(rowIdx + stpIdx, colIdx + stpIdx) == 0
-                            || isBoard(rowIdx + blkIdx, colIdx - blkIdx) && get(rowIdx + blkIdx, colIdx - blkIdx) < 0
-                            && isBoard(rowIdx + stpIdx, colIdx - stpIdx) && get(rowIdx + stpIdx, colIdx - stpIdx) == 0
-                            || isBoard(rowIdx - blkIdx, colIdx - blkIdx) && get(rowIdx - blkIdx, colIdx - blkIdx) < 0
-                            && isBoard(rowIdx - stpIdx, colIdx - stpIdx) && get(rowIdx - stpIdx, colIdx - stpIdx) == 0
-                            || isBoard(rowIdx - blkIdx, colIdx + blkIdx) && get(rowIdx - blkIdx, colIdx + blkIdx) < 0
-                            && isBoard(rowIdx - stpIdx, colIdx + stpIdx) && get(rowIdx - stpIdx, colIdx + stpIdx) == 0) {
+
+                    if (isBoard(rowIdx + blkIdx, colIdx + blkIdx) && isBlack(rowIdx + blkIdx, colIdx + blkIdx)
+                            && isBoard(rowIdx + stpIdx, colIdx + stpIdx) && isEmpty(rowIdx + stpIdx, colIdx + stpIdx)) {
+
+                        // провереям, что нет белых на диагонали
+                        for (int i = 1; i < stpIdx; i++) {
+                            if (isBoard(rowIdx + i, colIdx + i) && isWhite(rowIdx + i, colIdx + i)) {
+                                return false;
+                            }
+                        }
+                        return true;
+
+                    }
+                    if (isBoard(rowIdx + blkIdx, colIdx - blkIdx) && isBlack(rowIdx + blkIdx, colIdx - blkIdx)
+                            && isBoard(rowIdx + stpIdx, colIdx - stpIdx) && isEmpty(rowIdx + stpIdx, colIdx - stpIdx)) {
+
+                        // провереям, что нет белых на диагонали
+                        for (int i = 1; i < stpIdx; i++) {
+                            if (isBoard(rowIdx + i, colIdx - i) && isWhite(rowIdx + i, colIdx - i)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
+                    if(isBoard(rowIdx - blkIdx, colIdx - blkIdx) && isBlack(rowIdx - blkIdx, colIdx - blkIdx)
+                            && isBoard(rowIdx - stpIdx, colIdx - stpIdx) && isEmpty(rowIdx - stpIdx, colIdx - stpIdx)) {
+
+                        // провереям, что нет белых на диагонали
+                        for (int i = 1; i < stpIdx; i++) {
+                            if (isBoard(rowIdx - i, colIdx - i) && isWhite(rowIdx - i, colIdx - i)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    if(isBoard(rowIdx - blkIdx, colIdx + blkIdx) && isBlack(rowIdx - blkIdx, colIdx + blkIdx)
+                            && isBoard(rowIdx - stpIdx, colIdx + stpIdx) && isEmpty(rowIdx - stpIdx, colIdx + stpIdx)) {
+
+                        // провереям, что нет белых на диагонали
+                        for (int i = 1; i < stpIdx; i++) {
+                            if (isBoard(rowIdx - i, colIdx + i) && isWhite(rowIdx - i, colIdx + i)) {
+                                return false;
+                            }
+                        }
                         return true;
                     }
                 }
