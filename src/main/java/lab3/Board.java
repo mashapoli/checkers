@@ -10,7 +10,7 @@ public final class Board {
 
     // 0,0 - левый нижний; 0,7 - правый нижний; 7,0 - левый верхний
     // белые внизу
-    int[][] squares;
+    private int[][] squares;
 
     public Board() {
         this(new int[8][8]);
@@ -111,47 +111,59 @@ public final class Board {
                 for (int stpIdx = blkIdx + 1; stpIdx < 8; stpIdx++) {
 
 
-                    if (isBoard(rowIdx + blkIdx, colIdx + blkIdx) && isBlack(rowIdx + blkIdx, colIdx + blkIdx)
-                            && isBoard(rowIdx + stpIdx, colIdx + stpIdx) && isEmpty(rowIdx + stpIdx, colIdx + stpIdx)) {
+                    if (isBoard(rowIdx + blkIdx, colIdx + blkIdx)
+                            && isBlack(rowIdx + blkIdx, colIdx + blkIdx)
+                            && isBoard(rowIdx + stpIdx, colIdx + stpIdx)
+                            && isEmpty(rowIdx + stpIdx, colIdx + stpIdx)) {
 
                         // провереям, что нет белых на диагонали
                         for (int i = 1; i < stpIdx; i++) {
-                            if (isBoard(rowIdx + i, colIdx + i) && isWhite(rowIdx + i, colIdx + i)) {
+                            if (isBoard(rowIdx + i, colIdx + i)
+                                    && isWhite(rowIdx + i, colIdx + i)) {
                                 return false;
                             }
                         }
                         return true;
 
                     }
-                    if (isBoard(rowIdx + blkIdx, colIdx - blkIdx) && isBlack(rowIdx + blkIdx, colIdx - blkIdx)
-                            && isBoard(rowIdx + stpIdx, colIdx - stpIdx) && isEmpty(rowIdx + stpIdx, colIdx - stpIdx)) {
+                    if (isBoard(rowIdx + blkIdx, colIdx - blkIdx)
+                            && isBlack(rowIdx + blkIdx, colIdx - blkIdx)
+                            && isBoard(rowIdx + stpIdx, colIdx - stpIdx)
+                            && isEmpty(rowIdx + stpIdx, colIdx - stpIdx)) {
 
                         // провереям, что нет белых на диагонали
                         for (int i = 1; i < stpIdx; i++) {
-                            if (isBoard(rowIdx + i, colIdx - i) && isWhite(rowIdx + i, colIdx - i)) {
+                            if (isBoard(rowIdx + i, colIdx - i)
+                                    && isWhite(rowIdx + i, colIdx - i)) {
                                 return false;
                             }
                         }
                         return true;
                     }
 
-                    if(isBoard(rowIdx - blkIdx, colIdx - blkIdx) && isBlack(rowIdx - blkIdx, colIdx - blkIdx)
-                            && isBoard(rowIdx - stpIdx, colIdx - stpIdx) && isEmpty(rowIdx - stpIdx, colIdx - stpIdx)) {
+                    if (isBoard(rowIdx - blkIdx, colIdx - blkIdx)
+                            && isBlack(rowIdx - blkIdx, colIdx - blkIdx)
+                            && isBoard(rowIdx - stpIdx, colIdx - stpIdx)
+                            && isEmpty(rowIdx - stpIdx, colIdx - stpIdx)) {
 
                         // провереям, что нет белых на диагонали
                         for (int i = 1; i < stpIdx; i++) {
-                            if (isBoard(rowIdx - i, colIdx - i) && isWhite(rowIdx - i, colIdx - i)) {
+                            if (isBoard(rowIdx - i, colIdx - i)
+                                    && isWhite(rowIdx - i, colIdx - i)) {
                                 return false;
                             }
                         }
                         return true;
                     }
-                    if(isBoard(rowIdx - blkIdx, colIdx + blkIdx) && isBlack(rowIdx - blkIdx, colIdx + blkIdx)
-                            && isBoard(rowIdx - stpIdx, colIdx + stpIdx) && isEmpty(rowIdx - stpIdx, colIdx + stpIdx)) {
+                    if (isBoard(rowIdx - blkIdx, colIdx + blkIdx)
+                            && isBlack(rowIdx - blkIdx, colIdx + blkIdx)
+                            && isBoard(rowIdx - stpIdx, colIdx + stpIdx)
+                            && isEmpty(rowIdx - stpIdx, colIdx + stpIdx)) {
 
                         // провереям, что нет белых на диагонали
                         for (int i = 1; i < stpIdx; i++) {
-                            if (isBoard(rowIdx - i, colIdx + i) && isWhite(rowIdx - i, colIdx + i)) {
+                            if (isBoard(rowIdx - i, colIdx + i)
+                                    && isWhite(rowIdx - i, colIdx + i)) {
                                 return false;
                             }
                         }
@@ -206,11 +218,12 @@ public final class Board {
                 int stpColStartIdx = colDiff > 0 ? 1 : -1;
                 int stpColInc = colDiff > 0 ? 1 : -1;
 
-                for (int stpRowIdx = fromRowIdx + stpRowStartIdx; stpRowIdx != fromRowIdx + rowDiff; stpRowIdx += stpRowInc) {
-                    for (int stpColIdx = fromColIdx + stpColStartIdx; stpColIdx != fromColIdx + colDiff; stpColIdx += stpColInc) {
-                        if (!(isBoard(stpRowIdx, stpColIdx) && get(stpRowIdx, stpColIdx) == EMPTY_SQUARE)) {
-                            return false;
-                        }
+                for (int stpRowIdx = fromRowIdx + stpRowStartIdx, stpColIdx = fromColIdx + stpColStartIdx;
+                     stpRowIdx != fromRowIdx + rowDiff && stpColIdx != fromColIdx + colDiff;
+                     stpRowIdx += stpRowInc, stpColIdx += stpColInc) {
+
+                    if (!(isBoard(stpRowIdx, stpColIdx) && get(stpRowIdx, stpColIdx) == EMPTY_SQUARE)) {
+                        return false;
                     }
                 }
 
@@ -258,16 +271,17 @@ public final class Board {
 
                 int blackCount = 0;
                 Integer blackRowIdx = null, blackColIdx = null;
-                for (int stpRowIdx = fromRowIdx + stpRowStartIdx; stpRowIdx != fromRowIdx + rowDiff; stpRowIdx += stpRowInc) {
-                    for (int stpColIdx = fromColIdx + stpColStartIdx; stpColIdx != fromColIdx + colDiff; stpColIdx += stpColInc) {
-                        if (isBlack(stpRowIdx, stpColIdx)) {
-                            blackRowIdx = stpRowIdx;
-                            blackColIdx = stpColIdx;
-                            blackCount++;
-                        }
-                        if(isWhite(stpRowIdx, stpColIdx)) {
-                            return false;
-                        }
+                for (int stpRowIdx = fromRowIdx + stpRowStartIdx, stpColIdx = fromColIdx + stpColStartIdx;
+                     stpRowIdx != fromRowIdx + rowDiff && stpColIdx != fromColIdx + colDiff;
+                     stpRowIdx += stpRowInc, stpColIdx += stpColInc) {
+
+                    if (isBlack(stpRowIdx, stpColIdx)) {
+                        blackRowIdx = stpRowIdx;
+                        blackColIdx = stpColIdx;
+                        blackCount++;
+                    }
+                    if (isWhite(stpRowIdx, stpColIdx)) {
+                        return false;
                     }
                 }
 
@@ -283,6 +297,42 @@ public final class Board {
             }
         }
         return false;
+    }
+
+    public boolean isVictory() {
+
+        int whiteCount = 0;
+        int totalCount = 0;
+
+        for (int rowIdx = 0; rowIdx < 8; rowIdx++) {
+            for (int colIdx = 0; colIdx < 8; colIdx++) {
+                if (isWhite(rowIdx, colIdx)) {
+                    whiteCount++;
+                }
+                if (!isEmpty(rowIdx, colIdx)) {
+                    totalCount++;
+                }
+            }
+        }
+        if (whiteCount == totalCount) {
+            return true;
+        }
+        //есть ли ход у черных
+        Board reverseBoard = swap();
+
+        for (int rowIdx = 0; rowIdx < 8; rowIdx++) {
+            for (int colIdx = 0; colIdx < 8; colIdx++) {
+                if (reverseBoard.get(rowIdx, colIdx) == Board.WHITE_MEN_SQUARE) {
+                    if (reverseBoard.isBoard(rowIdx + 1, colIdx + 1)
+                            && reverseBoard.isEmpty(rowIdx + 1, colIdx + 1)
+                            || reverseBoard.isBoard(rowIdx + 1, colIdx - 1)
+                            && reverseBoard.isEmpty(rowIdx + 1, colIdx - 1)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void printBoard() {

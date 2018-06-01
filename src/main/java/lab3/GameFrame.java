@@ -7,14 +7,17 @@ import java.awt.event.MouseEvent;
 
 public class GameFrame extends JFrame {
 
-    Board curBoard = new Board();
+    private JPanel boardPanel;
+    private String msg = "";
 
-    boolean isWhite = true;
-    Integer fromRowIdx, fromColIdx;
-    String msg = "";
+    private Board curBoard = new Board();
+
+    private boolean isVictory = false;
+    private boolean isWhite = true;
+    private Integer fromRowIdx, fromColIdx;
 
     public GameFrame() {
-        JPanel boardPanel = new JPanel() {
+        boardPanel = new JPanel() {
             @Override
             public void paint(Graphics g) {
 
@@ -101,6 +104,10 @@ public class GameFrame extends JFrame {
 
     private void action(int rowIdx, int colIdx) {
 
+        if(isVictory) {
+            return;
+        }
+
         msg = "";
 
         if(!isWhite) {
@@ -122,9 +129,7 @@ public class GameFrame extends JFrame {
                 if (curBoard.isMenCapture(rowIdx, colIdx) || curBoard.isKingCapture(rowIdx, colIdx)) {
                     setFromIdxs(rowIdx, colIdx);
                 } else {
-                    unsetFromIdxs();
-                    isWhite = !isWhite;
-                    curBoard = curBoard.swap();
+                    passTurn();
                 }
                 return;
             }
@@ -133,9 +138,7 @@ public class GameFrame extends JFrame {
             return;
         } else if(isFromIdxsSet()) {
             if(curBoard.move(fromRowIdx, fromColIdx, rowIdx, colIdx)) {
-                unsetFromIdxs();
-                isWhite = !isWhite;
-                curBoard = curBoard.swap();
+                passTurn();
                 return;
             }
             msg = "Некорректный ход";
@@ -147,14 +150,25 @@ public class GameFrame extends JFrame {
         }
     }
 
+    public void passTurn() {
+        if(curBoard.isVictory()) {
+            isVictory = true;
+            msg = "Победа";
+            return;
+        }
+        unsetFromIdxs();
+        isWhite = !isWhite;
+        curBoard = curBoard.swap();
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 GameFrame gameFrame = new GameFrame();
-                Dimension size = new Dimension(520, 570);
-                gameFrame.setMinimumSize(size);
-                gameFrame.setMaximumSize(size);
+                Dimension size = new Dimension(512, 542);
+                gameFrame.boardPanel.setPreferredSize(size);
+                gameFrame.setTitle("Checkers");
                 gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 gameFrame.setLocationRelativeTo(null);
                 gameFrame.pack();
